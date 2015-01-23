@@ -53,6 +53,8 @@ buzz.all().setVolume(volume);
 var loopGameloop;
 var loopPipeloop;
 
+var next = {};
+
 $(document).ready(function() {
    if(window.location.search == "?debug")
       debugmode = true;
@@ -151,6 +153,13 @@ function updatePlayer(player)
    
    //apply rotation and position
    $(player).css({ rotate: rotation, top: position });
+   var flappyHeight = Math.abs(player.offset().top - 345 - 430);
+
+   if(!next.middle) playerJump();
+
+   if(flappyHeight < next.middle - 24) {
+   	playerJump();
+   }
 }
 
 function gameloop() {
@@ -209,6 +218,8 @@ function gameloop() {
    var pipeleft = nextpipeupper.offset().left - 2; // for some reason it starts at the inner pipes offset, not the outer pipes.
    var piperight = pipeleft + pipewidth;
    var pipebottom = pipetop + pipeheight;
+
+   next = { left: nextpipe.offset().left - 90, middle: 420 - (nextpipeupper.height() + 45) }; // 90 is the default left offset
    
    if(debugmode)
    {
